@@ -3,7 +3,7 @@ IDIR = ./include
 ODIR = ./obj
 
 CC=gcc
-CFLAGS= -W -Wall -pedantic  -I$(IDIR) `pkg-config --cflags --libs check`
+CFLAGS= -W -Wall -pedantic  -I$(IDIR) 
 DEBUG = -g
 
 _DEPS = $(patsubst $(IDIR)/%,%,$(DEPS))

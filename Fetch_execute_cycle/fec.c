@@ -59,3 +59,10 @@ void read_bin()
   fclose(fptr); 
 }
 
+void fetch()
+{
+  ri = mem[pc>>2];
+  pc += 4;
+}
+
+
