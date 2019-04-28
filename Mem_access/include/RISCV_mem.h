@@ -1,5 +1,10 @@
+#ifndef RISCV_MEM
+#define RISCV_MEM
+
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+
 
 // RISCV simulator memory size(16KBytes)
 #define  MEM_SIZE  4096
@@ -15,4 +20,7 @@ int32_t lbu(uint32_t  address, int32_t byte_offset);
 void sw(uint32_t  address, int32_t byte_offset, int32_t data);
 void sh(uint32_t  address, int32_t byte_offset, int16_t data);
 void sb(uint32_t  address, int32_t byte_offset, int8_t data);
+void read_bin(char* file_name);
 void dump_mem(uint32_t address, uint32_t wsize);
+
+#endif

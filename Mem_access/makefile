@@ -1,13 +1,21 @@
-CC=gcc
-CFLAGS= -W -Wall -g -pedantic -I.
-DEPS = RISCV_mem.h
-OBJ = test.o RISCV_mem.o
+IDIR = ./include
+ODIR = ./obj
 
-%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+CC=gcc
+CFLAGS= -W -Wall -pedantic -I$(IDIR)
+DEBUG = -g
+
+_DEPS = $(patsubst $(IDIR)/%,%,$(DEPS))
+DEPS = $(wildcard $(IDIR)/*.h)
+
+_OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+$(ODIR)/%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(DEBUG)
 
 test: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(DEBUG)
 
 clean:
-	rm -f ./*.o 
+	rm -f $(wildcard $(ODIR)/*.o)

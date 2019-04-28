@@ -1,4 +1,4 @@
-  #include "RISCV_mem.h"
+#include "RISCV_mem.h"
 
 int32_t mem[MEM_SIZE];
 
@@ -178,6 +178,18 @@ void sb(uint32_t  address, int32_t byte_offset, int8_t data)
 
   // Overwrite memory half word address
   mem[address>>2] |= tmp;
+}
+
+void read_file(char* file_name)
+{
+  FILE *fptr;
+
+  if ((fptr = fopen("../text","rb")) == NULL){
+       printf("Error! opening file");
+       // Program exits if the file pointer returns NULL.
+       exit(1);
+   }
+
 }
 
 void dump_mem(uint32_t address, uint32_t wsize)
