@@ -7,9 +7,12 @@
 
 // RISCV simulator memory size(16KBytes)
 #define  MEM_SIZE  4096
+#define  DATA  2048
+
 
 // Memory set, exported to differents files
 extern int32_t mem[MEM_SIZE];
+extern int32_t breg[32];
 
 int32_t lw(uint32_t  address, int32_t byte_offset);
 int32_t lh(uint32_t  address, int32_t byte_offset);

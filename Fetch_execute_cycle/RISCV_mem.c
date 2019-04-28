@@ -1,6 +1,7 @@
 #include "./include/RISCV_mem.h"
 
 int32_t mem[MEM_SIZE];
+int32_t breg[32];
 
 int32_t lw(uint32_t  address, int32_t byte_offset)
 {

@@ -5,11 +5,27 @@ uint32_t pc = 0x00000000;
 uint32_t ri = 0x00000000;
 uint32_t sp = 0x00003FFC;
 uint32_t gp = 0x00001800;
+int32_t opcode=0;
+int32_t rs1=0;
+int32_t rs2=0;
+int32_t rt=0;
+int32_t rd=0;
+int32_t shamt=0;
+int32_t funct3=0;
+int32_t funct7=0;
+
+int32_t imm12_i=0;
+int32_t imm12_s=0;
+int32_t imm13=0;
+int32_t imm20_u=0;
+int32_t imm21=0;
 
 void read_bin()
 {
   FILE *fptr;
   int n=0;
+
+  // .text area (0x00000000)
   int i=0;
   int32_t hex_number=0;
 
@@ -20,6 +36,7 @@ void read_bin()
       // Program exits if the file pointer returns NULL.
       exit(1);
   }
+
 
   while(!feof(fptr))
   {
@@ -34,6 +51,9 @@ void read_bin()
   }
 
   fclose(fptr); 
+
+  // .data area(0x00002000) - each index corresponds to 4 bytes
+  i = DATA;
 
   // Read data.bin file and transfers to mem area
   if ((fptr = fopen("./data.bin","rb")) == NULL){
@@ -65,4 +85,92 @@ void fetch()
   pc += 4;
 }
 
+void decode()
+{
+  uint32_t opcode_mask = 0x0000007F; 
+  uint32_t rd_mask = 0x0000F80; 
+  uint32_t funct3_mask = 0x00007000; 
+  uint32_t rs1_mask = 0x000F8000; 
+  uint32_t shamt_mask = 0x01F00000;
+  uint32_t rs2_mask = 0x01F00000; 
+  uint32_t funct7_mask = 0xFE000000;
+  uint32_t imm12_i_mask = 0xFFF00000;
+  uint32_t imm12_s_mask_0_4 = 0x00000F80;
+  uint32_t imm12_s_mask_5_11 = 0xFE000000;
+  uint32_t imm13_mask_11_1_4 = 0x00000F80;
+  uint32_t imm13_mask_5_12 = 0xFE000000;
+  uint32_t imm20_u_mask = 0xFFFFF000;
+  uint32_t imm21_mask = 0xFFFFF000;
+
+  int32_t imm12_s_5_11 = 0;
+  int32_t imm13_5_12 = 0;
+
+  // opcode
+  opcode = ri&opcode_mask;
+
+  // rd
+  rd = ri&rd_mask;
+  rd >>= 7;
+
+  // funct3
+  funct3 = ri&funct3_mask;
+  funct3 >>= 12; 
+
+  // rs1
+  rs1 = ri&rs1_mask;
+  rs1 >>= 15;
+
+  // rs2
+  rs2 = ri&rs2_mask;
+  rs2 >>= 20;
+
+  // shamt
+  shamt = ri&shamt_mask;
+  shamt >>= 20;
+
+  // funct7
+  funct7 = ri&funct7_mask;
+  funct7 >>= 25;
+
+  // imm12_i
+  imm12_i = ri&imm12_i_mask;
+  imm12_i >>= 20;
+
+  // imm12_s
+  imm12_s = ri&imm12_s_mask_0_4;
+  imm12_s >>= 7;
+
+  imm12_s_5_11 = ri&imm12_s_mask_5_11;
+  imm12_s_5_11 >>= 20;
+
+  imm12_s |= imm12_s_5_11;
+
+  // imm12_s
+  imm12_s = ri&imm12_s_mask_0_4;
+  imm12_s >>= 7;
+
+  imm12_s_5_11 = ri&imm12_s_mask_5_11;
+  imm12_s_5_11 >>= 20;
+
+  imm12_s |= imm12_s_5_11;
+
+  // imm13
+  imm13 = 0;
+  imm13 = ri&imm13_mask_11_1_4;
+  imm13 >>= 6;
+
+  imm13_5_12 = ri&imm13_mask_5_12;
+  imm13_5_12 >>= 19;
+
+  imm13 |= imm13_5_12;
+
+  // imm20_u
+  imm20_u = ri&imm20_u_mask;
+  imm20_u >>= 12;
+
+  // imm21
+  imm21 = ri&imm21_mask;
+  imm21 >>= 12;
+
+}
 
