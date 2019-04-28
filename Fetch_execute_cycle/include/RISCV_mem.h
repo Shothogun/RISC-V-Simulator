@@ -1,10 +1,9 @@
-#ifndef RISCV_MEM
-#define RISCV_MEM
+#ifndef RISCV_MEM_H
+#define RISCV_MEM_H
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-
 
 // RISCV simulator memory size(16KBytes)
 #define  MEM_SIZE  4096

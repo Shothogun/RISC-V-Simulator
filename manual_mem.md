@@ -2,6 +2,8 @@
 
 ## Compilação
 
+### Compilador
+
 O __compilador__ empregado para a construção do programa de teste da biblioteca simuladora do RISC_V foi o __gcc 7.3.0__ (padrão do Linux Ubuntu 18.04).
 
 Para sua compilação foi utilizada o seguinte padrão:
@@ -10,7 +12,10 @@ Para sua compilação foi utilizada o seguinte padrão:
 $ gcc <arquivos> -W -Wall -g -pedantic -o <nome_do_programa>
 ```
 
-Mais informações da forma como os códigos foram compilados, por favor, consultar o arquivo Makefile. Para a compilação do programa, basta estar no diretório dos arquivos de código juntamente com o arquivo makefile e executar pelo terminal:
+Mais informações da forma como os códigos foram compilados, por favor, consultar o arquivo Makefile.
+
+### Compilar o programa de teste das bibliotecas de acesso à memória
+Para a compilação do programa de teste de memória, basta estar no diretório /Mem_acces e executar pelo terminal:
 
 ```
 $ make

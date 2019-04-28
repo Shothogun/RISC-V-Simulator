@@ -1,4 +1,4 @@
-#include "RISCV_mem.h"
+#include "./include/RISCV_mem.h"
 
 int32_t mem[MEM_SIZE];
 
