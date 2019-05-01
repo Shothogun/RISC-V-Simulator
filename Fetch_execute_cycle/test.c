@@ -87,7 +87,7 @@ int main(){
   printf("***Execute***\n\n");
 
   // LUI instruction
-  printf("\t***Teste instrucao LUI***\n\n");
+  printf("***Teste instrucao LUI***\n\n");
   opcode = LUI;              
   imm20_u = 0xFFFFCAFE;
   rd = t0;                     // t1 register
@@ -96,10 +96,10 @@ int main(){
 
   printf("\topcode: %X\n", LUI);
   printf("\tValor no imm20_u: %.8X\n", imm20_u);
-  printf("\tValor no registro: %.8X\n",breg[rd]);
+  printf("\tValor no registro: %.8X\n\n",breg[rd]);
 
   // AUIPC instruction
-  printf("\t\t***Teste instrucao AUIPC***\n\n");
+  printf("***Teste instrucao AUIPC***\n\n");
   opcode = AUIPC;
   pc = 0x4;   
   imm20_u = 0x0001234B;
@@ -109,14 +109,14 @@ int main(){
 
   printf("\topcode: %X\n", AUIPC);
   printf("\tValor no imm20_u: %.8X\n", imm20_u);
-  printf("\tValor no registro: %.8X\n",breg[rd]);
+  printf("\tValor no registro: %.8X\n\n",breg[rd]);
 
   // ILType instruction
-  printf("\t***Teste instrucao ILType***\n\n");  
+  printf("***Teste instrucao ILType***\n\n");  
   opcode = ILType;
 
     // LB instruction
-    printf("\t\t***Teste instrucao load byte***\n\n");
+    printf("\t***Teste instrucao load byte***\n\n");
 
     funct3 = LB3;
     rd = t1;
@@ -128,13 +128,13 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", LB3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
-    printf("\t\t***Segundo Teste instrucao load byte***\n\n");
+    printf("\t***Segundo Teste instrucao load byte***\n\n");
 
     mem[DATA+1] = 0xA3;            // byte stored
 
@@ -147,14 +147,14 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", LB3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // LH instruction
-    printf("\t\t***Teste instrucao load half***\n\n");
+    printf("\t***Teste instrucao load half***\n\n");
 
     mem[DATA] = 0xCAFE;           // Half word stored
     funct3 = LH3;
@@ -166,14 +166,14 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", LH3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // LW instruction
-    printf("\t\t***Teste instrucao load word***\n\n");
+    printf("\t***Teste instrucao load word***\n\n");
 
     mem[DATA] = 0xABCDCAFE;       // word stored
     funct3 = LW3;
@@ -185,14 +185,14 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", LW3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // Lbu instruction
-    printf("\t\t***Teste instrucao load byte unsigned***\n\n");
+    printf("\t***Teste instrucao load byte unsigned***\n\n");
 
     mem[DATA] = 0xA3;            // byte unsigned stored
     funct3 = LBU3;
@@ -204,14 +204,14 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", LBU3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // Lhu instruction
-    printf("\t\t***Teste instrucao load half unsigned***\n\n");
+    printf("\t***Teste instrucao load half unsigned***\n\n");
 
     mem[DATA] = 0xCAFE;          // Half word unsigned stored
     funct3 = LHU3;
@@ -223,17 +223,17 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", LHU3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
   
-  // ILType instruction
-  printf("\t\t***Teste instrucao Store***\n\n");  
+  // opcode instruction
+  printf("***Teste instrucao Store***\n\n");  
   opcode = StoreType;
 
-    printf("\t\t***Teste instrucao Store byte***\n\n");  
+    printf("\t***Teste instrucao Store byte***\n\n");  
     // SB instruction
 
     funct3 = SB3;
@@ -245,14 +245,14 @@ int main(){
     
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", SB3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
     printf("\tValor no endereço de rs1: %.8X\n\n", mem[breg[rs1]>>2]);
 
-    printf("\t\t***Teste instrucao Store half***\n\n");  
+    printf("\t***Teste instrucao Store half***\n\n");  
     // SH instruction
 
     funct3 = SH3;
@@ -264,14 +264,14 @@ int main(){
     
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", SH3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
-    printf("\tValor no endereço de rs1: %.8X\n", mem[breg[rs1]>>2]);
+    printf("\tValor no endereço de rs1: %.8X\n\n", mem[breg[rs1]>>2]);
 
-    printf("\t\t***Teste instrucao Store word***\n\n");  
+    printf("\t***Teste instrucao Store word***\n\n");  
 
     // Sw instruction
 
@@ -284,8 +284,8 @@ int main(){
     
     execute();
 
-    printf("\topcode: %X\n", ILType);
-    printf("\tfunct3: %X\n", SW3);
+    printf("\topcode: %X\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);

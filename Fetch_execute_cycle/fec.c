@@ -199,18 +199,28 @@ void execute()
       breg[rd] = lhu(breg[rs1], imm12_i);
       break;
     }
+    break;
   case BType:
     switch (funct3){
     case BEQ3:
+      
+      break;
     case BNE3:
+      break;
     case BLT3:
+      break;
     case BGE3:
+      break;
     case BLTU3:
+      break;
     case BGEU3:
       break;
     }
+    break;
   case JAL:
+    break;
   case JALR:
+    break;
   case StoreType:
     switch (funct3){
     case SB3:
@@ -223,44 +233,65 @@ void execute()
       sw(breg[rs1], imm12_s, breg[rs2]);
       break;
     }
+    break;
   case ILAType:
     switch (funct3){        
     case ADDI3:
+      break;
     case ORI3:
+      break;
     case SLTI3:
+      break;
     case XORI3:
+      break;
     case ANDI3:
+      break;
     case SLTIU3:
+      break;
     case SLLI3:
+      break;
     case SRI3:
       switch (funct7){
       case SRLI7:
+        break;
       case SRAI7:
         break;
       }
+      break;
     }
+    break;
   case RegType:
     switch (funct3){
       case ADDSUB3:
-        switch (funct7){
-          case ADD7:
-          case SUB7:
-            break;
-        }
+        break;
+      switch (funct7){
+        case ADD7:
+          break;
+        case SUB7:
+          break;
+      }
       case SLL3:
+        break;
       case SLT3:
+        break;
       case SLTU3:
+        break;
       case XOR3:
+        break;
       case SR3:
         switch (funct7){
           case SRL7:
+            break;
           case SRA7:
             break;
         }
+        break;
       case OR3:
+        break;
       case AND3:
         break;
     }
+    break;
   case ECALL:
     break;
   }
