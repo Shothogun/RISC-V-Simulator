@@ -9,7 +9,6 @@
 #define  MEM_SIZE  4096
 #define  DATA  2048
 
-
 // Memory set, exported to differents files
 extern int32_t mem[MEM_SIZE];
 extern int32_t breg[32];

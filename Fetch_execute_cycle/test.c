@@ -81,6 +81,8 @@ int main(){
   printf("\timm12_s:\t%.8X\n", imm12_s);
   printf("\timm13:\t\t%.8X\n", imm13);
   printf("\timm20:\t\t%.8X\n", imm13);
+
   
+    
   return 0;
 }

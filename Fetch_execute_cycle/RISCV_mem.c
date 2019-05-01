@@ -1,7 +1,13 @@
 #include "./include/RISCV_mem.h"
+#include "./include/fec.h"
 
 int32_t mem[MEM_SIZE];
-int32_t breg[32];
+
+// Breg initialization(sp = 0x00003FFC, gp = 0x00001800)
+int32_t breg[32] = {0,0,0x00003FFC,0x00001800,0,0,0,0,
+                    0,0,0         ,0         ,0,0,0,0,
+                    0,0,0         ,0         ,0,0,0,0,
+                    0,0,0         ,0         ,0,0,0,0,};
 
 int32_t lw(uint32_t  address, int32_t byte_offset)
 {
@@ -185,7 +191,7 @@ void dump_mem(uint32_t address, uint32_t wsize)
 {
   int pos = address>>2;
 
-  for (int i=pos; i < wsize; i++){
+  for (uint32_t i=pos; i < wsize; i++){
     printf("mem[%d] = %.8X\n", i, mem[i]);
   }
 }
