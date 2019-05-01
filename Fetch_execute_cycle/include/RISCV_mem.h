@@ -7,6 +7,8 @@
 
 // RISCV simulator memory size(16KBytes)
 #define  MEM_SIZE  4096
+
+// Corresponding array index to address 0x2000
 #define  DATA  2048
 
 // Memory set, exported to differents files
