@@ -152,7 +152,6 @@ void decode()
   imm12_s |= imm12_s_5_11;
 
   // imm13
-  imm13 = 0;
   imm13 = ri&imm13_mask_11_1_4;
   imm13 >>= 6;
 
@@ -160,6 +159,7 @@ void decode()
   imm13_5_12 >>= 19;
 
   imm13 |= imm13_5_12;
+  imm21 &= ~(0x1);
 
   // imm20_u
   imm20_u = ri&imm20_u_mask;
@@ -167,12 +167,15 @@ void decode()
 
   // imm21
   imm21 = ri&imm21_mask;
-  imm21 >>= 12;
+  imm21 >>= 11;
+  imm21 &= ~(0x1);
 
 }
 
 void execute()
 {
+
+  uint32_t urs1,urs2;
   switch(opcode){
   case LUI:
     imm20_u = (int32_t) imm20_u;
@@ -203,23 +206,44 @@ void execute()
   case BType:
     switch (funct3){
     case BEQ3:
-      
+      pc -= 4;
+      if(breg[rs1] == breg[rs2]) pc += imm13;
       break;
     case BNE3:
+      pc -= 4;
+      if(breg[rs1] != breg[rs2]) pc += imm13;
       break;
     case BLT3:
+      pc -= 4;
+      if(breg[rs1] < breg[rs2]) pc += imm13;
       break;
     case BGE3:
+      pc -= 4;
+      if(breg[rs1] > breg[rs2]) pc += imm13;
       break;
     case BLTU3:
+      pc -= 4;
+      urs1 = (uint32_t) breg[rs1];
+      urs2 = (uint32_t) breg[rs2];
+      if(urs1 < urs2) pc += imm13;
       break;
     case BGEU3:
+      pc -= 4;
+      urs1 = (uint32_t) breg[rs1];
+      urs2 = (uint32_t) breg[rs2];
+      if(urs1 > urs2) pc += imm13;
       break;
     }
     break;
   case JAL:
+    pc -= 4;
+    breg[rd] = pc+4;
+    pc += imm21;
     break;
   case JALR:
+    pc -= 4;
+    breg[rd] = pc+4;
+    pc = (breg[rs1]+imm12_i)&~(0x1);
     break;
   case StoreType:
     switch (funct3){

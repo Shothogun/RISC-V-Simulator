@@ -128,7 +128,7 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
@@ -147,7 +147,7 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
@@ -166,7 +166,7 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
@@ -185,7 +185,7 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
@@ -204,7 +204,7 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
@@ -223,13 +223,13 @@ int main(){
 
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
   
-  // opcode instruction
+  // StoreType instruction
   printf("***Teste instrucao Store***\n\n");  
   opcode = StoreType;
 
@@ -245,7 +245,7 @@ int main(){
     
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
@@ -264,7 +264,7 @@ int main(){
     
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
@@ -284,12 +284,180 @@ int main(){
     
     execute();
 
-    printf("\topcode: %X\n", opcode);
+    printf("\topcode: %d\n", opcode);
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
-    printf("\tValor no endereço de rs1: %.8X\n", mem[breg[rs1]>>2]);
+    printf("\tValor no endereço de rs1: %.8X\n\n", mem[breg[rs1]>>2]);
+
+  // BType instruction
+  printf("***Teste instrucao tipo B***\n\n");  
+  opcode = BType;
+
+    // BEQ instruction - true condition
+
+    printf("\t***Teste instrucao BEQ***\n\n");  
+    funct3 = BEQ3;
+    uint32_t previous_pc = 0xC;        // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 3;
+    breg[rs2] = 3;
+    imm13 = (0x8);                     // always even jumps 
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", imm13);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+    // BNE instruction - true condition
+
+    printf("\t***Teste instrucao BNE***\n\n");  
+    funct3 = BNE3;
+    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 2;
+    breg[rs2] = 3;
+    imm13 = (0x8);                     // always even jumps 
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", imm13);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+    // BLT instruction - true condition
+
+    printf("\t***Teste instrucao BLT***\n\n");  
+    funct3 = BLT3;
+    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 0xFFFFFFFF;
+    breg[rs2] = 0x00000003;
+    imm13 = (0x8);                     // always even jumps 
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", imm13);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+    // BGE instruction - true condition
+
+    printf("\t***Teste instrucao BGE***\n\n");  
+    funct3 = BGE3;
+    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 0x00000003;
+    breg[rs2] = 0xFFFFFFFF;
+    imm13 = (0x8);                     // always even jumps 
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", imm13);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+    // BLTU instruction - true condition
+
+    printf("\t***Teste instrucao BLTU***\n\n");  
+    funct3 = BLTU3;
+    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 0x00000003;
+    breg[rs2] = 0xFFFFFFFF;
+    imm13 = (0x8);                     // always even jumps 
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", imm13);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+    // BGEU instruction - true condition
+
+    printf("\t***Teste instrucao BGEU***\n\n");  
+    funct3 = BGEU3;
+    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 0xFFFFFFFF;
+    breg[rs2] = 0x00000003;
+    imm13 = (0x8);                     // always even jumps 
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", imm13);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+  printf("***Teste instrucao JAL***\n\n");  
+
+  opcode = JAL;
+  previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+  pc = previous_pc;
+  imm21 = 0x8;
+  
+  execute();
+
+  printf("\topcode: %d\n", opcode);
+  printf("\toffset(imm21): %.8X\n", imm21);
+  printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+  printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+  printf("***Teste instrucao JALR***\n\n");  
+
+  opcode = JALR;
+  previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+  pc = previous_pc;
+  imm12_i = 0x9;
+  rs1 = t0;
+  breg[rs1] = 0x2000;
+  
+  execute();
+
+  printf("\topcode: %d\n", opcode);
+  printf("\toffset(imm12_i): %.8X\n", imm12_i);
+  printf("\tValor do rs1: %.8X\n", breg[rs1]);
+  printf("\tValor do rd: %.8X\n", breg[rd]);
+  printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+  printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
 
   return 0;
 }
