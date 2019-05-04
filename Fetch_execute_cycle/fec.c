@@ -133,14 +133,10 @@ void decode()
   imm12_i = ri&imm12_i_mask;
   imm12_i >>= 20;
 
-  // imm12_s
-  imm12_s = ri&imm12_s_mask_0_4;
-  imm12_s >>= 7;
+    // extend signal 
 
-  imm12_s_5_11 = ri&imm12_s_mask_5_11;
-  imm12_s_5_11 >>= 20;
-
-  imm12_s |= imm12_s_5_11;
+    imm12_i <<= 20;
+    imm12_i >>= 20;
 
   // imm12_s
   imm12_s = ri&imm12_s_mask_0_4;
@@ -150,6 +146,11 @@ void decode()
   imm12_s_5_11 >>= 20;
 
   imm12_s |= imm12_s_5_11;
+
+    // extend signal 
+
+    imm12_s <<= 20;
+    imm12_s >>= 20;
 
   // imm13
   imm13 = ri&imm13_mask_11_1_4;
@@ -159,27 +160,43 @@ void decode()
   imm13_5_12 >>= 19;
 
   imm13 |= imm13_5_12;
-  imm21 &= ~(0x1);
+  imm13 &= ~(0x1);
+
+    // extend signal 
+
+    imm13 <<= 19;
+    imm13 >>= 19;
 
   // imm20_u
   imm20_u = ri&imm20_u_mask;
   imm20_u >>= 12;
+
+    // extend signal 
+
+    imm20_u <<= 12;
+    imm20_u >>= 12;
+
 
   // imm21
   imm21 = ri&imm21_mask;
   imm21 >>= 11;
   imm21 &= ~(0x1);
 
+    // extend signal 
+
+    imm21 <<= 11;
+    imm21 >>= 11;
+
 }
 
 void execute()
 {
 
-  uint32_t urs1,urs2;
+  uint32_t urs1,urs2, uimm12_i;
   switch(opcode){
   case LUI:
-    imm20_u = (int32_t) imm20_u;
     breg[rd] = (imm20_u<<12);
+    breg[rd] &= ~(0xFFF);
     break;
   case AUIPC:
     breg[rd] = pc + (imm20_u<<12);
@@ -261,24 +278,35 @@ void execute()
   case ILAType:
     switch (funct3){        
     case ADDI3:
+      breg[rd] = breg[rs1] + imm12_i;
       break;
     case ORI3:
+      breg[rd] = breg[rs1]|imm12_i;
       break;
     case SLTI3:
+      if(breg[rs1] < imm12_i) breg[rd] = 0x1;
       break;
     case XORI3:
+      breg[rd] = breg[rs1]^imm12_i;
       break;
     case ANDI3:
+      breg[rd] = breg[rs1]&imm12_i;
       break;
     case SLTIU3:
+      uimm12_i = (uint32_t) imm12_i;
+      urs1 = (uint32_t) breg[rs1];
+      if(urs1 < uimm12_i) breg[rd] = 0x1;
       break;
     case SLLI3:
+      breg[rd] = breg[rs1]<<shamt;
       break;
     case SRI3:
       switch (funct7){
       case SRLI7:
+        breg[rd] = (uint32_t) breg[rs1]>>shamt;
         break;
       case SRAI7:
+        breg[rd] = breg[rs1]>>shamt;
         break;
       }
       break;
@@ -286,37 +314,50 @@ void execute()
     break;
   case RegType:
     switch (funct3){
-      case ADDSUB3:
-        break;
+    case ADDSUB3:
       switch (funct7){
         case ADD7:
+          breg[rd] = breg[rs1] + breg[rs2];
           break;
         case SUB7:
+          breg[rd] = breg[rs1] - breg[rs2];
           break;
       }
-      case SLL3:
-        break;
-      case SLT3:
-        break;
-      case SLTU3:
-        break;
-      case XOR3:
-        break;
-      case SR3:
-        switch (funct7){
-          case SRL7:
-            break;
-          case SRA7:
-            break;
-        }
-        break;
-      case OR3:
-        break;
-      case AND3:
-        break;
+      break;
+    case SLL3:
+      breg[rd] = breg[rs1]<<(0x1F&breg[rs2]);
+      break;
+    case SLT3:
+      if(breg[rs1] < breg[rs2]) breg[rd] = 0x1;
+      break;
+    case SLTU3:
+      urs1 = (uint32_t) breg[rs1];
+      urs2 = (uint32_t) breg[rs2];
+      if(urs1 < urs2) breg[rd] = 0x1;
+      break;
+    case XOR3:
+      breg[rd] = breg[rs1]^breg[rs2];
+      break;
+    case SR3:
+      switch (funct7){
+        case SRL7:
+          breg[rd] = (uint32_t) breg[rs1]>>(0x1F&breg[rs2]);
+          break;
+        case SRA7:
+          breg[rd] = breg[rs1]>>(0x1F&breg[rs2]);
+          break;
+      }
+      break;
+    case OR3:
+      breg[rd] = breg[rs1] | breg[rs2];
+      break;
+    case AND3:
+      breg[rd] = breg[rs1] & breg[rs2];
+      break;
     }
     break;
   case ECALL:
+    
     break;
   }
 }

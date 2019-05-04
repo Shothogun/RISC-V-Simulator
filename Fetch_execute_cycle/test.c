@@ -108,6 +108,7 @@ int main(){
   execute();
 
   printf("\topcode: %X\n", AUIPC);
+  printf("\tValor de pc: %.8X\n", pc);
   printf("\tValor no imm20_u: %.8X\n", imm20_u);
   printf("\tValor no registro: %.8X\n\n",breg[rd]);
 
@@ -132,6 +133,7 @@ int main(){
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     printf("\t***Segundo Teste instrucao load byte***\n\n");
@@ -151,7 +153,29 @@ int main(){
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
+
+    printf("\t***Terceiro Teste instrucao load byte(negativo)***\n\n");
+
+    mem[DATA] = 0x0000B4A3;            // byte stored
+
+    funct3 = LB3;
+    rd = t1;
+    rs1 = t0;
+    breg[rs1] = 0x2003;           // byte address
+
+    imm12_i = 0xFFE;                  // offset
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm12_i): %.8X\n", 0xFFE);
+    printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor no endereço 0x2000: %.8X\n", mem[breg[rs1]>>2]);
+    printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
+
 
     // LH instruction
     printf("\t***Teste instrucao load half***\n\n");
@@ -170,6 +194,7 @@ int main(){
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // LW instruction
@@ -189,6 +214,7 @@ int main(){
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // Lbu instruction
@@ -208,6 +234,7 @@ int main(){
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
     // Lhu instruction
@@ -227,11 +254,14 @@ int main(){
     printf("\tfunct3: %X\n", funct3);
     printf("\toffset(imm12_i): %.8X\n", imm12_i);
     printf("\tValor no registro de endereço: %.8X\n",breg[rs1]);
+    printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
   
   // StoreType instruction
   printf("***Teste instrucao Store***\n\n");  
   opcode = StoreType;
+
+  printf("Valor anterior em 0x2000: 0x0000CAFE\n\n");  
 
     printf("\t***Teste instrucao Store byte***\n\n");  
     // SB instruction
@@ -239,7 +269,7 @@ int main(){
     funct3 = SB3;
     rs1 = t0;
     rs2 = t1;
-    breg[rs1] = 0x2000;           // Destiny addres
+    breg[rs1] = 0x2001;           // Destiny addres
     breg[rs2] = 0xAB;             // value stored
     imm12_s = 2;
     
@@ -250,7 +280,28 @@ int main(){
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
-    printf("\tValor no endereço de rs1: %.8X\n\n", mem[breg[rs1]>>2]);
+    printf("\tValor no endereço de 0x2000: %.8X\n\n", mem[breg[rs1]>>2]);
+
+    printf("\t***Teste instrucao Store byte(offset negativo)***\n\n");  
+    // SB instruction
+
+    funct3 = SB3;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 0x2003;           // Destiny addres
+    breg[rs2] = 0xCD;             // value stored
+    imm12_s = 0xFFF;
+    
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm12_s): %.8X\n", 0xFFF);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor no endereço de 0x2000: %.8X\n\n", mem[breg[rs1]>>2]);
+
+    
 
     printf("\t***Teste instrucao Store half***\n\n");  
     // SH instruction
@@ -269,7 +320,7 @@ int main(){
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
-    printf("\tValor no endereço de rs1: %.8X\n\n", mem[breg[rs1]>>2]);
+    printf("\tValor no endereço de 0x2000: %.8X\n\n", mem[breg[rs1]>>2]);
 
     printf("\t***Teste instrucao Store word***\n\n");  
 
@@ -289,7 +340,7 @@ int main(){
     printf("\toffset(imm12_s): %.8X\n", imm12_s);
     printf("\tValor no rs1: %.8X\n", breg[rs1]);
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
-    printf("\tValor no endereço de rs1: %.8X\n\n", mem[breg[rs1]>>2]);
+    printf("\tValor no endereço de 0x2000: %.8X\n\n", mem[breg[rs1]>>2]);
 
   // BType instruction
   printf("***Teste instrucao tipo B***\n\n");  
@@ -316,6 +367,32 @@ int main(){
     printf("\tValor no rs2: %.8X\n", breg[rs2]);
     printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
     printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+    printf("\t***Teste instrucao BEQ(offset negativo)***\n\n");  
+    funct3 = BEQ3;
+    previous_pc = 0xC;        // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    rs1 = t0;
+    rs2 = t1;
+    breg[rs1] = 3;
+    breg[rs2] = 3;
+    imm13 = 0x1FFE;                          // always even jumps 
+
+    // extend signal 
+    imm13 <<= 19;
+    imm13 >>= 19;
+
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %X\n", funct3);
+    printf("\toffset(imm13): %.8X\n", 0x1FFE);
+    printf("\tValor no rs1: %.8X\n", breg[rs1]);
+    printf("\tValor no rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
 
     // BNE instruction - true condition
 
@@ -441,6 +518,25 @@ int main(){
   printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
   printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
 
+
+    printf("\t***Teste instrucao JAL(offset negativo)***\n\n");  
+
+    opcode = JAL;
+    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+    pc = previous_pc;
+    imm21 = 0x1FFFFE;
+
+    // extend signal 
+    imm21 <<= 11;
+    imm21 >>= 11;
+    
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\toffset(imm21): %.8X\n", 0x1FFFFE);
+    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
   printf("***Teste instrucao JALR***\n\n");  
 
   opcode = JALR;
@@ -455,9 +551,629 @@ int main(){
   printf("\topcode: %d\n", opcode);
   printf("\toffset(imm12_i): %.8X\n", imm12_i);
   printf("\tValor do rs1: %.8X\n", breg[rs1]);
-  printf("\tValor do rd: %.8X\n", breg[rd]);
+  printf("\tValor do rd: %.8X", breg[rd]);
   printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
   printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
 
+    printf("\t***Teste instrucao JALR(offset negativo)***\n\n");  
+
+  opcode = JALR;
+  previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+  pc = previous_pc;
+
+  imm12_i = 0xFFF;
+  // extend signal 
+  imm12_i <<= 20;
+  imm12_i >>= 20;
+
+  rs1 = t0;
+  breg[rs1] = 0x2004;
+  
+  execute();
+
+  printf("\topcode: %d\n", opcode);
+  printf("\toffset(imm12_i): %.8X\n", 0xFFF);
+  printf("\tValor do rs1: %.8X\n", breg[rs1]);
+  printf("\tValor do rd: %.8X", breg[rd]);
+  printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+  printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+
+  // ILAType instruction
+  printf("***Teste instrucao ILAType***\n\n");  
+  opcode = ILAType;
+
+    // ADDI instruction
+
+    printf("\t***Teste instrucao ADDI***\n\n");  
+    funct3 = ADDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x0F;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xF0;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", ADDI3);
+    printf("\timm12_i: %.8X\n", 0x0F);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x000000FF);
+
+    printf("\t***Teste instrucao ADDI***\n\n");  
+    funct3 = ADDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x8FF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+    
+    breg[rs1] = 0xF0;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x8FF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFFFFF9EF);
+
+    printf("\t***Teste instrucao ADDI(immediato negativo)***\n\n");  
+    funct3 = ADDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0xFFF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0xFFF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x0000000E);
+
+
+    printf("\t***Teste instrucao ADDI(overflow)***\n\n");  
+    funct3 = ADDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x001;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0x7FFFFFFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x001);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x80000000);
+
+    printf("\t***Teste 1 instrucao ORI***\n\n");  
+    funct3 = ORI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0xFFF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0xFFF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFFFFFFFF);
+
+    printf("\t***Teste 2 instrucao ORI***\n\n");  
+    funct3 = ORI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x7FF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x7FF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x000007FF);
+
+    printf("\t***Teste 3 instrucao ORI***\n\n");  
+    funct3 = ORI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x800;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x800);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFFFFF800);
+
+
+    printf("\t***Teste 1 instrucao ANDI***\n\n");  
+    funct3 = ANDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0xFFF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xAAAAAAAA;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0xFFF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xAAAAAAAA);
+
+    printf("\t***Teste 2 instrucao ANDI***\n\n");  
+    funct3 = ANDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x7FF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xAAAAAAAA;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x7FF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x000002AA);
+
+    printf("\t***Teste 3 instrucao ANDI***\n\n");  
+    funct3 = ANDI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x800;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xAAAAAAAA;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x800);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xAAAAA800);
+
+
+    printf("\t***Teste 1 instrucao XORI***\n\n");  
+    funct3 = XORI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0xFFF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xFFFFFFFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0xFFF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0);
+
+    printf("\t***Teste 2 instrucao XORI***\n\n");  
+    funct3 = XORI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x7FF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xFFFFFFFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x7FF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFFFFF800);
+
+    printf("\t***Teste 3 instrucao XORI***\n\n");  
+    funct3 = XORI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x800;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xFFFFFFFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x800);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x000007FF);
+
+    printf("\t***Teste instrucao SLTI***\n\n");
+    breg[rd] = 0;
+    funct3 = SLTI3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0x1;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0xFFFFFFFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0x1);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x1);
+
+    printf("\t***Teste instrucao SLTIU***\n\n");  
+    breg[rd] = 0;
+    funct3 = SLTIU3;
+    rd = t1;
+    rs1 = t0;
+
+    imm12_i = 0xFFF;
+    // extend signal 
+    imm12_i <<= 20;
+    imm12_i >>= 20;
+
+    breg[rs1] = 0x1;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\timm12_i: %.8X\n", 0xFFF);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x1);
+
+    printf("\t***Teste instrucao SLLI***\n\n");  
+    breg[rd] = 0;
+    funct3 = SLLI3;
+    rd = t1;
+    rs1 = t0;
+
+    shamt = 0x3;
+
+    breg[rs1] = 0xFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tshamt: %.8X\n", 0x3);
+    printf("\tValor do rs1: %.8X\n", breg[rs1]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x7F8);
+
+    printf("\t***Teste instrucao SRI***\n\n");
+      printf("\t\t***Teste instrucao SRLI***\n\n"); 
+      breg[rd] = 0;
+      funct3 = SRI3;
+      funct7 = SRLI7;
+      rd = t1;
+      rs1 = t0;
+
+      shamt = 0x3;
+
+      breg[rs1] = 0xFF000000;
+
+      execute();
+
+      printf("\topcode: %d\n", opcode);
+      printf("\tfunct3: %.8X\n", funct3);
+      printf("\tfunct7: %.8X\n", funct7);
+      printf("\tshamt: %.8X\n", 0x3);
+      printf("\tValor do rs1: %.8X\n", breg[rs1]);
+      printf("\tValor do rd: %.8X\n", breg[rd]);
+      printf("\tValor esperado do rd: %.8X\n\n", 0x1FE00000);
+
+      printf("\t\t***Teste instrucao SRAI***\n\n"); 
+      breg[rd] = 0;
+      funct3 = SRI3;
+      funct7 = SRAI7;
+      rd = t1;
+      rs1 = t0;
+
+      shamt = 0x3;
+
+      breg[rs1] = 0xFF000000;
+
+      execute();
+
+      printf("\topcode: %d\n", opcode);
+      printf("\tfunct3: %.8X\n", funct3);
+      printf("\tfunct7: %.8X\n", funct7);
+      printf("\tshamt: %.8X\n", 0x3);
+      printf("\tValor do rs1: %.8X\n", breg[rs1]);
+      printf("\tValor do rd: %.8X\n", breg[rd]);
+      printf("\tValor esperado do rd: %.8X\n\n", 0xFFE00000);
+
+  printf("***Teste instrucao RegType***\n\n");  
+
+    printf("\t***Teste instrucao ADD***\n\n");  
+    opcode = RegType;
+    funct3 = ADDSUB3;
+    funct7 = ADD7;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0xFFFFFFFF;
+    breg[rs2] = 0x1;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tfunct7: %.8X\n", funct7);
+    printf("\tValor do rs1: %.8X\n", 0xFFFFFFFF);
+    printf("\tValor do rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0);
+
+    printf("\t***Teste instrucao SUB***\n\n");  
+    opcode = RegType;
+    funct3 = ADDSUB3;
+    funct7 = SUB7;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0xFFFFFFFF;
+    breg[rs2] = 0x1;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tfunct7: %.8X\n", funct7);
+    printf("\tValor do rs1: %.8X\n", 0xFFFFFFFF);
+    printf("\tValor do rs2: %.8X\n", breg[rs2]);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFFFFFFFE);
+
+    printf("\t***Teste instrucao SLL***\n\n");  
+    opcode = RegType;
+    funct3 = SLL3;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0x000000FF;
+    breg[rs2] = 0x8;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tValor do rs1: %.8X\n", 0x000000FF);
+    printf("\tValor do rs2: %.8X\n", 0x8);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFF00);
+
+    printf("\t***Teste instrucao SRL***\n\n");  
+    opcode = RegType;
+    funct3 = SR3;
+    funct7 = SRL7;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0xAB000000;
+    breg[rs2] = 0x8;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tfunct7: %.8X\n", funct7);
+    printf("\tValor do rs1: %.8X\n", 0xAB000000);
+    printf("\tValor do rs2: %.8X\n", 0x8);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x00AB0000);
+
+    printf("\t***Teste instrucao SRA***\n\n");  
+    opcode = RegType;
+    funct3 = SR3;
+    funct7 = SRA7;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0xAB000000;
+    breg[rs2] = 0x8;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tfunct7: %.8X\n", funct7);
+    printf("\tValor do rs1: %.8X\n", 0xAB000000);
+    printf("\tValor do rs2: %.8X\n", 0x8);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xFFAB0000);
+
+    printf("\t***Teste instrucao SLT***\n\n");  
+    opcode = RegType;
+    funct3 = SLT3;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0xFFFFFFFF;
+    breg[rs2] = 0x1;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tValor do rs1: %.8X\n", 0xFFFFFFFF);
+    printf("\tValor do rs2: %.8X\n", 0x1);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x1);
+
+    printf("\t***Teste instrucao SLTU***\n\n");  
+    opcode = RegType;
+    funct3 = SLTU3;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0x1;
+    breg[rs2] = 0xFFFFFFFF;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tValor do rs1: %.8X\n", 0x1);
+    printf("\tValor do rs2: %.8X\n", 0xFFFFFFFF);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x1);
+
+    printf("\t***Teste instrucao XOR***\n\n");  
+    opcode = RegType;
+    funct3 = XOR3;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0x0F0F0F0F;
+    breg[rs2] = 0xFEFDFCFB;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tValor do rs1: %.8X\n", 0x0F0F0F0F);
+    printf("\tValor do rs2: %.8X\n", 0xFEFDFCFB);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xF1F2F3F4);
+
+    printf("\t***Teste instrucao OR***\n\n");  
+    opcode = RegType;
+    funct3 = OR3;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0xAAA00AAA;
+    breg[rs2] = 0x11111111;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tValor do rs1: %.8X\n", 0xAAA00AAA);
+    printf("\tValor do rs2: %.8X\n", 0x111FF111);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0xBBBFFBBB);
+
+    printf("\t***Teste instrucao AND***\n\n");  
+    opcode = RegType;
+    funct3 = AND3;
+
+    rs1 = t4;
+    rs2 = t5;
+    rd = t4;
+
+    breg[rs1] = 0x1234ABCD;
+    breg[rs2] = 0xEFEFFEFE;
+
+    execute();
+
+    printf("\topcode: %d\n", opcode);
+    printf("\tfunct3: %.8X\n", funct3);
+    printf("\tValor do rs1: %.8X\n", 0x1234ABCD);
+    printf("\tValor do rs2: %.8X\n", 0x00800808);
+    printf("\tValor do rd: %.8X\n", breg[rd]);
+    printf("\tValor esperado do rd: %.8X\n\n", 0x0224AACC);
   return 0;
 }

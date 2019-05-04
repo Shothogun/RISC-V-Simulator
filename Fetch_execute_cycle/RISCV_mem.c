@@ -95,6 +95,8 @@ int32_t lb(uint32_t  address, int32_t byte_offset)
   // Copies mem value
   select_byte = mem[address>>2];
 
+  byte_offset += address%4;
+
   // Selects the chosen offset byte bits
   select_byte >>= (byte_offset*8);
 
@@ -111,6 +113,8 @@ int32_t lbu(uint32_t  address, int32_t byte_offset)
   
   // Copies mem value
   select_byte = mem[address>>2];
+
+  byte_offset += address%4;
 
   // Selects the chosen offset byte bits
   select_byte >>= (byte_offset*8);
@@ -171,6 +175,8 @@ void sh(uint32_t  address, int32_t byte_offset, int16_t data)
 void sb(uint32_t  address, int32_t byte_offset, int8_t data)
 {
   int32_t tmp = data;
+
+  byte_offset += address%4;
 
   // Eliminates sign bit propagation
   tmp &= 0xFF;
