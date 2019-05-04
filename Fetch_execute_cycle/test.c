@@ -156,7 +156,7 @@ int main(){
     printf("\tValor nesse endereço: %.8X\n", mem[breg[rs1]>>2]);
     printf("\tValor no registro destino: %.8X\n\n", breg[rd]);
 
-    printf("\t***Terceiro Teste instrucao load byte(negativo)***\n\n");
+    printf("\t***Terceiro Teste instrucao load byte(offset negativo)***\n\n");
 
     mem[DATA] = 0x0000B4A3;            // byte stored
 
@@ -166,6 +166,11 @@ int main(){
     breg[rs1] = 0x2003;           // byte address
 
     imm12_i = 0xFFE;                  // offset
+
+    // extend signal 
+
+    imm12_i <<= 20;
+    imm12_i >>= 20;
 
     execute();
 
@@ -291,7 +296,12 @@ int main(){
     breg[rs1] = 0x2003;           // Destiny addres
     breg[rs2] = 0xCD;             // value stored
     imm12_s = 0xFFF;
-    
+
+    // extend signal 
+
+    imm12_s <<= 20;
+    imm12_s >>= 20;
+  
     execute();
 
     printf("\topcode: %d\n", opcode);
@@ -1175,5 +1185,61 @@ int main(){
     printf("\tValor do rs2: %.8X\n", 0x00800808);
     printf("\tValor do rd: %.8X\n", breg[rd]);
     printf("\tValor esperado do rd: %.8X\n\n", 0x0224AACC);
+
+  printf("***Teste instrucao ECALL***\n\n");
+    printf("\t***Teste comando PrintSring***\n\n");
+
+    opcode   = ECALL;
+    breg[a7] = SYS_PRINT_STRING;
+    breg[a0] = 0x2000;
+
+    mem[DATA]   = 0x6f20734f;
+    mem[DATA+1] = 0x206f7469;
+    mem[DATA+2] = 0x6d697270;
+    mem[DATA+3] = 0x6f726965;
+    mem[DATA+4] = 0x756e2073;
+    mem[DATA+5] = 0x6f72656d;
+    mem[DATA+6] = 0x72702073;
+    mem[DATA+7] = 0x736f6d69;
+    mem[DATA+8] = 0x6f617320;
+    mem[DATA+9] = 0x00203a20;
+
+    execute();
+
+    printf("\n\n");
+
+    printf("\t***Teste comando PrintChar***\n\n");
+
+    opcode   = ECALL;
+    breg[a7] = SYS_PRINT_CHAR;
+    breg[a0] = 0x2000;
+
+    execute();
+
+    printf("\n\n");
+
+    printf("\t***Teste comando PrintInt***\n\n");
+
+    mem[DATA]   = 0x00000007;
+    opcode   = ECALL;
+    breg[a7] = SYS_PRINT_INT;
+    breg[a0] = 0x2000;
+
+    execute();
+
+    printf("\n\n");
+
+    printf("\t***Teste comando EXIT***\n\n");
+
+    mem[DATA]   = 0x00000007;
+    opcode   = ECALL;
+    breg[a7] = SYS_EXIT;
+
+    execute();
+
+    printf("Nao deve ser printado essa mensagem");
+
+  
+
   return 0;
 }

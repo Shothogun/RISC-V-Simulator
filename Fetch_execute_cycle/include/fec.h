@@ -52,6 +52,11 @@ typedef enum {
   ADD7=0, SUB7=0x20, SRA7=0x20, SRL7=0, SRLI7=0x00, SRAI7=0x20
 } FUNCT7;
 
+typedef enum {
+  // Comandos syscall
+  SYS_PRINT_INT=1, SYS_PRINT_STRING=4, SYS_PRINT_CHAR = 11, SYS_EXIT = 10
+} A7;
+
 void read_bin();
 void fetch();
 void decode();

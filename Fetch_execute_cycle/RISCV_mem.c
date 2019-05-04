@@ -92,10 +92,22 @@ int32_t lb(uint32_t  address, int32_t byte_offset)
   int32_t select_byte = 0;
   int8_t return_value = 0; 
 
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
+  if(address%4 != 0){
+    byte_offset += address%4;
+    address -= address%4;
+  }
+
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if(byte_offset >= 4){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
+  }
+
   // Copies mem value
   select_byte = mem[address>>2];
-
-  byte_offset += address%4;
 
   // Selects the chosen offset byte bits
   select_byte >>= (byte_offset*8);
@@ -111,10 +123,22 @@ int32_t lbu(uint32_t  address, int32_t byte_offset)
   int32_t select_byte = 0;
   uint8_t return_value = 0;
   
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
+  if(address%4 != 0){
+    byte_offset += address%4;
+    address -= address%4;
+  }
+
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if(byte_offset >= 4){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
+  }
+
   // Copies mem value
   select_byte = mem[address>>2];
-
-  byte_offset += address%4;
 
   // Selects the chosen offset byte bits
   select_byte >>= (byte_offset*8);
@@ -176,7 +200,19 @@ void sb(uint32_t  address, int32_t byte_offset, int8_t data)
 {
   int32_t tmp = data;
 
-  byte_offset += address%4;
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
+  if(address%4 != 0){
+    byte_offset += address%4;
+    address -= address%4;
+  }
+
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if(byte_offset >= 4){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
+  }
 
   // Eliminates sign bit propagation
   tmp &= 0xFF;

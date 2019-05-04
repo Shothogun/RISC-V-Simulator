@@ -191,9 +191,12 @@ void decode()
 
 void execute()
 {
-
+  int i=0;
+  int number=0;
+  char character;
   uint32_t urs1,urs2, uimm12_i;
-  switch(opcode){
+  switch(opcode)
+  {
   case LUI:
     breg[rd] = (imm20_u<<12);
     breg[rd] &= ~(0xFFF);
@@ -202,7 +205,8 @@ void execute()
     breg[rd] = pc + (imm20_u<<12);
     break;
   case ILType:
-    switch (funct3){
+    switch (funct3)
+    {
     case LB3:
       breg[rd] = lb(breg[rs1], imm12_i);
       break;
@@ -221,7 +225,8 @@ void execute()
     }
     break;
   case BType:
-    switch (funct3){
+    switch (funct3)
+    {
     case BEQ3:
       pc -= 4;
       if(breg[rs1] == breg[rs2]) pc += imm13;
@@ -263,7 +268,8 @@ void execute()
     pc = (breg[rs1]+imm12_i)&~(0x1);
     break;
   case StoreType:
-    switch (funct3){
+    switch (funct3)
+    {
     case SB3:
       sb(breg[rs1], imm12_s, breg[rs2]);
       break;
@@ -276,7 +282,8 @@ void execute()
     }
     break;
   case ILAType:
-    switch (funct3){        
+    switch (funct3)
+    {        
     case ADDI3:
       breg[rd] = breg[rs1] + imm12_i;
       break;
@@ -301,7 +308,8 @@ void execute()
       breg[rd] = breg[rs1]<<shamt;
       break;
     case SRI3:
-      switch (funct7){
+      switch (funct7)
+      {
       case SRLI7:
         breg[rd] = (uint32_t) breg[rs1]>>shamt;
         break;
@@ -313,9 +321,11 @@ void execute()
     }
     break;
   case RegType:
-    switch (funct3){
+    switch (funct3)
+    {
     case ADDSUB3:
-      switch (funct7){
+      switch (funct7)
+      {
         case ADD7:
           breg[rd] = breg[rs1] + breg[rs2];
           break;
@@ -339,7 +349,8 @@ void execute()
       breg[rd] = breg[rs1]^breg[rs2];
       break;
     case SR3:
-      switch (funct7){
+      switch (funct7)
+      {
         case SRL7:
           breg[rd] = (uint32_t) breg[rs1]>>(0x1F&breg[rs2]);
           break;
@@ -357,7 +368,31 @@ void execute()
     }
     break;
   case ECALL:
-    
+    switch (breg[a7])
+    {
+    case SYS_PRINT_INT:
+      number = lb(breg[a0],i);
+      printf("%d", number);
+      break;
+
+    case SYS_PRINT_STRING:
+      character = lbu(breg[a0],i);
+      while(character){
+        printf("%c", character);
+        i++;
+        character = lbu(breg[a0],i);
+      }
+      break;
+    case SYS_PRINT_CHAR:
+      character = lbu(breg[a0],i);
+      printf("%c", character);
+      break;
+
+    case SYS_EXIT:
+      printf("\n-- program is finished running --\n");
+      exit(1);
+      break;
+    }
     break;
   }
 }
