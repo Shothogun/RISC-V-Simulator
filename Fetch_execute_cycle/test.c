@@ -108,7 +108,7 @@ int main(){
   execute();
 
   printf("\topcode: %X\n", AUIPC);
-  printf("\tValor de pc: %.8X\n", pc);
+  printf("\tValor de pc: %.8X\n", pc-4);
   printf("\tValor no imm20_u: %.8X\n", imm20_u);
   printf("\tValor no registro: %.8X\n\n",breg[rd]);
 
@@ -1193,16 +1193,16 @@ int main(){
     breg[a7] = SYS_PRINT_STRING;
     breg[a0] = 0x2000;
 
-    mem[DATA]   = 0x6f20734f;
-    mem[DATA+1] = 0x206f7469;
-    mem[DATA+2] = 0x6d697270;
-    mem[DATA+3] = 0x6f726965;
-    mem[DATA+4] = 0x756e2073;
-    mem[DATA+5] = 0x6f72656d;
-    mem[DATA+6] = 0x72702073;
-    mem[DATA+7] = 0x736f6d69;
-    mem[DATA+8] = 0x6f617320;
-    mem[DATA+9] = 0x00203a20;
+    mem[DATA]   = 0x6f20734f;		// Os o
+    mem[DATA+1] = 0x206f7469;		// ito 
+    mem[DATA+2] = 0x6d697270;		// prim
+    mem[DATA+3] = 0x6f726965;		// eiro
+    mem[DATA+4] = 0x756e2073;		// s nu
+    mem[DATA+5] = 0x6f72656d;		// mero
+    mem[DATA+6] = 0x72702073;		// s pr
+    mem[DATA+7] = 0x736f6d69;		// imos
+    mem[DATA+8] = 0x6f617320;		//  sao
+    mem[DATA+9] = 0x00203a20;		//  : 
 
     execute();
 
@@ -1212,7 +1212,7 @@ int main(){
 
     opcode   = ECALL;
     breg[a7] = SYS_PRINT_CHAR;
-    breg[a0] = 0x2000;
+    breg[a0] = 'A';
 
     execute();
 
@@ -1223,7 +1223,7 @@ int main(){
     mem[DATA]   = 0x00000007;
     opcode   = ECALL;
     breg[a7] = SYS_PRINT_INT;
-    breg[a0] = 0x2000;
+    breg[a0] = 7;
 
     execute();
 

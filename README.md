@@ -30,7 +30,8 @@ $ ./test
 
 ### Compilar o programa que simula o RISCV
 
-Para compilar o programa responsável por simular a arquitetura do RISCV executando um programa em assembly, no caso expresso em arquivos binários data.bin e text.bin(correspondente ao código assembly_tests.asm), execute no terminal: 
+Para compilar o programa responsável por simular a arquitetura do RISCV executando um programa em assembly, no caso expresso em arquivos binários data.bin e text.bin(correspondente ao código assembly_tests.asm), execute no terminal na pasta 
+`/Fetch_execute_cycle`: 
 
 ```
 $ make assembly_code
