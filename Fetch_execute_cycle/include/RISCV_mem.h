@@ -23,6 +23,6 @@ int32_t lbu(uint32_t  address, int32_t byte_offset);
 void sw(uint32_t  address, int32_t byte_offset, int32_t data);
 void sh(uint32_t  address, int32_t byte_offset, int16_t data);
 void sb(uint32_t  address, int32_t byte_offset, int8_t data);
-void dump_mem(uint32_t address, uint32_t wsize);
+void dump_mem(int start, int end, char format);
 
 #endif

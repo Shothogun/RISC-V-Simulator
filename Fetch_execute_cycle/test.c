@@ -529,23 +529,23 @@ int main(){
   printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
 
 
-    printf("\t***Teste instrucao JAL(offset negativo)***\n\n");  
+  printf("\t***Teste instrucao JAL(offset negativo)***\n\n");  
 
-    opcode = JAL;
-    previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
-    pc = previous_pc;
-    imm21 = 0x1FFFFE;
+  opcode = JAL;
+  previous_pc = 0xC;                 // pc is the next instruction(produced in fetch process)
+  pc = previous_pc;
+  imm21 = 0x1FFFFE;
 
-    // extend signal 
-    imm21 <<= 11;
-    imm21 >>= 11;
-    
-    execute();
+  // extend signal 
+  imm21 <<= 11;
+  imm21 >>= 11;
+  
+  execute();
 
-    printf("\topcode: %d\n", opcode);
-    printf("\toffset(imm21): %.8X\n", 0x1FFFFE);
-    printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
-    printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
+  printf("\topcode: %d\n", opcode);
+  printf("\toffset(imm21): %.8X\n", 0x1FFFFE);
+  printf("\tValor do pc anterior: %.8X\n", previous_pc-4);
+  printf("\tValor do pc apos o procedimento: %.8X\n\n", pc);
 
   printf("***Teste instrucao JALR***\n\n");  
 
@@ -1238,7 +1238,6 @@ int main(){
     execute();
 
     printf("Nao deve ser printado essa mensagem");
-
   
 
   return 0;

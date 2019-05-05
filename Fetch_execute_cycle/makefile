@@ -15,7 +15,12 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) $(DEBUG)
 
-test: $(OBJ)
+all: test assembly_code
+
+test: test.o fec.o RISCV_mem.o
+	$(CC) -o $(EDIR)/$@ $^ $(CFLAGS) $(DEBUG)
+
+assembly_code: assembly_code.o fec.o RISCV_mem.o
 	$(CC) -o $(EDIR)/$@ $^ $(CFLAGS) $(DEBUG)
 
 clean:

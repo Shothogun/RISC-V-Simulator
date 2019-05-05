@@ -61,5 +61,8 @@ void read_bin();
 void fetch();
 void decode();
 void execute();
+void step();
+void run();
+void dump_reg(char format);
 
 #endif

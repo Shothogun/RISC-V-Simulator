@@ -84,23 +84,37 @@ void fetch()
 
 void decode()
 {
-  uint32_t opcode_mask = 0x0000007F; 
-  uint32_t rd_mask = 0x0000F80; 
-  uint32_t funct3_mask = 0x00007000; 
-  uint32_t rs1_mask = 0x000F8000; 
-  uint32_t shamt_mask = 0x01F00000;
-  uint32_t rs2_mask = 0x01F00000; 
-  uint32_t funct7_mask = 0xFE000000;
-  uint32_t imm12_i_mask = 0xFFF00000;
-  uint32_t imm12_s_mask_0_4 = 0x00000F80;
-  uint32_t imm12_s_mask_5_11 = 0xFE000000;
-  uint32_t imm13_mask_11_1_4 = 0x00000F80;
-  uint32_t imm13_mask_5_12 = 0xFE000000;
-  uint32_t imm20_u_mask = 0xFFFFF000;
-  uint32_t imm21_mask = 0xFFFFF000;
+  int32_t opcode_mask = 0x0000007F; 
+  int32_t rd_mask = 0x0000F80; 
+  int32_t funct3_mask = 0x00007000; 
+  int32_t rs1_mask = 0x000F8000; 
+  int32_t shamt_mask = 0x01F00000;
+  int32_t rs2_mask = 0x01F00000; 
+  int32_t funct7_mask = 0xFE000000;
 
+  int32_t imm12_i_mask = 0xFFF00000;
+  int32_t imm12_s_mask_0_4 = 0x00000F80;
+  int32_t imm12_s_mask_5_11 = 0xFE000000;
   int32_t imm12_s_5_11 = 0;
+
+  int32_t imm13_mask_11_1_4 = 0x00000F80;
+  int32_t imm13_mask_5_12 = 0xFE000000;
+  int32_t imm13_mask_11 = 0x00000080;
+  int32_t imm13_mask_12 = 0x80000000;
   int32_t imm13_5_12 = 0;
+  int32_t imm13_11 = 0;
+  int32_t imm13_12 = 0;
+
+  int32_t imm20_u_mask = 0xFFFFF000;
+
+  int32_t imm21_11 = 0;
+  int32_t imm21_12_19 = 0;
+  int32_t imm21_20 = 0;
+  int32_t imm21_mask_1_10 = 0x7FE00000;
+  int32_t imm21_mask_11 = 0x00100000;
+  int32_t imm21_mask_12_19 = 0x000FF000;
+  int32_t imm21_mask_20 = 0x80000000;
+
 
   // opcode
   opcode = ri&opcode_mask;
@@ -154,12 +168,27 @@ void decode()
 
   // imm13
   imm13 = ri&imm13_mask_11_1_4;
-  imm13 >>= 6;
+
+  // Gets and position bit 11 and 12
+  imm13_11 = (ri&imm13_mask_11)<<4;
+  imm13_12 = (ri&imm13_mask_12)>>19;
+
+  // Erases garbage bit 11
+  imm13 &= ~imm13_mask_11;
+  
+  imm13 >>= 7;
 
   imm13_5_12 = ri&imm13_mask_5_12;
-  imm13_5_12 >>= 19;
+
+  // Erases garbage bit 12
+  imm13_5_12 &= ~imm13_mask_12;
+
+  imm13_5_12 = imm13_5_12>>20;
 
   imm13 |= imm13_5_12;
+  imm13 |= imm13_11;
+  imm13 |= imm13_12;
+
   imm13 &= ~(0x1);
 
     // extend signal 
@@ -178,9 +207,17 @@ void decode()
 
 
   // imm21
-  imm21 = ri&imm21_mask;
-  imm21 >>= 11;
+  imm21 = (ri&imm21_mask_1_10)>>20;
+  imm21_11 = (ri&imm21_mask_11)>>9;
+  imm21_12_19 = ri&imm21_mask_12_19;
+  imm21_20 = (ri&imm21_mask_20)>>11;
+
+  imm21 |= imm21_11;
+  imm21 |= imm21_12_19;
+  imm21 |= imm21_20;
+
   imm21 &= ~(0x1);
+
 
     // extend signal 
 
@@ -202,7 +239,9 @@ void execute()
     breg[rd] &= ~(0xFFF);
     break;
   case AUIPC:
+    pc -= 4;
     breg[rd] = pc + (imm20_u<<12);
+    pc += 4;
     break;
   case ILType:
     switch (funct3)
@@ -229,31 +268,64 @@ void execute()
     {
     case BEQ3:
       pc -= 4;
-      if(breg[rs1] == breg[rs2]) pc += imm13;
+      if(breg[rs1] == breg[rs2]){
+        pc += imm13;
+      }
+      else{
+        pc += 4;
+      }
       break;
     case BNE3:
       pc -= 4;
-      if(breg[rs1] != breg[rs2]) pc += imm13;
+      if(breg[rs1] != breg[rs2]) {
+        pc += imm13;
+      }
+      else{
+        pc += 4;
+      }
       break;
     case BLT3:
       pc -= 4;
-      if(breg[rs1] < breg[rs2]) pc += imm13;
+      if(breg[rs1] < breg[rs2]){
+         pc += imm13;
+      }
+      else{
+        pc += 4;
+      }
       break;
     case BGE3:
       pc -= 4;
-      if(breg[rs1] > breg[rs2]) pc += imm13;
+      if(breg[rs1] > breg[rs2]){
+         pc += imm13;
+      }
+
+      else{
+        pc += 4;
+      }
+
       break;
     case BLTU3:
       pc -= 4;
       urs1 = (uint32_t) breg[rs1];
       urs2 = (uint32_t) breg[rs2];
-      if(urs1 < urs2) pc += imm13;
+      if(urs1 < urs2){ 
+        pc += imm13;
+      }
+      else{
+        pc += 4;
+      }
       break;
     case BGEU3:
       pc -= 4;
       urs1 = (uint32_t) breg[rs1];
       urs2 = (uint32_t) breg[rs2];
-      if(urs1 > urs2) pc += imm13;
+      if(urs1 > urs2){
+        pc += imm13;
+      }
+
+      else{
+        pc += 4;
+      }
       break;
     }
     break;
@@ -371,7 +443,7 @@ void execute()
     switch (breg[a7])
     {
     case SYS_PRINT_INT:
-      number = lb(breg[a0],i);
+      number = breg[a0];
       printf("%d", number);
       break;
 
@@ -384,7 +456,7 @@ void execute()
       }
       break;
     case SYS_PRINT_CHAR:
-      character = lbu(breg[a0],i);
+      character = breg[a0];
       printf("%c", character);
       break;
 
@@ -397,3 +469,40 @@ void execute()
   }
 }
 
+void step(){
+  fetch();
+  decode();
+  execute();
+  breg[zero] = 0;                 // zero is always 0 = hardwired 
+}
+
+void run(){
+  while(1){
+    step();
+    if(pc == 0x2000){
+      printf("-- program is finished running (dropped off bottom) --!\n");
+      exit(0);
+    } 
+  }
+}
+
+void dump_reg(char format){
+  switch (format)
+  {
+  case 'd':
+    for(int i = 0; i < 32; i++){
+      printf("x%d: %d\n", i, breg[i]);
+    }
+    printf("pc: %d\n", pc);
+    printf("pc : %d\n", ri);
+    break;
+  
+  case 'h':
+    for(int i = 0; i < 32; i++){
+      printf("x%02d: %.8X\n", i, breg[i]);
+    }
+    printf("pc : %.8X\n", pc-4);
+    printf("ri : %.8X\n", ri);
+    break;
+  }
+}

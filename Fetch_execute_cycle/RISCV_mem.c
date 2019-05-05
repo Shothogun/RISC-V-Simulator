@@ -229,11 +229,24 @@ void sb(uint32_t  address, int32_t byte_offset, int8_t data)
   mem[address>>2] |= tmp;
 }
 
-void dump_mem(uint32_t address, uint32_t wsize)
+void dump_mem(int start, int end, char format)
 {
-  int pos = address>>2;
+  int pos = start>>2;
+  int endline = end>>2;
 
-  for (uint32_t i=pos; i < wsize; i++){
-    printf("mem[%d] = %.8X\n", i, mem[i]);
+  switch (format)
+  {
+  case 'h':
+    for (int i=pos; i < endline; i++){
+      printf("mem[%03d]\t =\t %.8X\n", i, mem[i]);
+    }
+    break;
+  
+  case 'd':
+    for (int i=pos; i < endline; i++){
+      printf("mem[%03d]\t =\t %d\n", i, mem[i]);
+    }
+    break;
   }
+
 }
