@@ -11,16 +11,18 @@ int32_t breg[32] = {0,0,0x00003FFC,0x00001800,0,0,0,0,
 
 int32_t lw(uint32_t  address, int32_t byte_offset)
 {
-  // address is not in range of word
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
   if(address%4 != 0){
-    printf("Load address not aligned to word boundary!\n");
-    return 0x0;
+    byte_offset += address%4;
+    address -= address%4;
   }
 
-  // byte_offset out of range
-  if(byte_offset != 0){
-    printf("Load byte_offset not aligned to word boundary!\n");
-    return 0x0;
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if((byte_offset >= 4) |( byte_offset <= -4)){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
   }
 
   return mem[address>>2];
@@ -29,16 +31,18 @@ int32_t lw(uint32_t  address, int32_t byte_offset)
 int32_t lh(uint32_t  address, int32_t byte_offset)
 {
 
-  // address is not in range of word
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
   if(address%4 != 0){
-    printf("Load address not aligned to word boundary(signed halfword)!\n");
-    return 0x0;
+    byte_offset += address%4;
+    address -= address%4;
   }
 
-  // byte_offset out of half word range
-  if(byte_offset != 0 && byte_offset != 2){
-    printf("Load byte_offset not aligned to word boundary(signed halfword)!\n");
-    return 0x0;
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if(byte_offset >= 4  | byte_offset <= -4){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
   }
 
   int32_t selected_half_word = 0;
@@ -58,16 +62,18 @@ int32_t lh(uint32_t  address, int32_t byte_offset)
 
 int32_t lhu(uint32_t  address, int32_t byte_offset)
 {
-  // address is not in range of word
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
   if(address%4 != 0){
-    printf("Load address not aligned to word boundary(unsigned halfword)!\n");
-    return 0x0;
+    byte_offset += address%4;
+    address -= address%4;
   }
 
-  // byte_offset out of half word range
-  if(byte_offset != 0 && byte_offset != 2){
-    printf("Load byte_offset not aligned to word boundary(unsigned halfword)!\n");
-    return 0x0;
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if(byte_offset >= 4  | byte_offset <= -4){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
   }
 
   int32_t select_half_word= 0;
@@ -101,7 +107,7 @@ int32_t lb(uint32_t  address, int32_t byte_offset)
 
   // If byte-offset is greater than 4,
   // adds it to address
-  if(byte_offset >= 4){
+  if(byte_offset >= 4  | byte_offset <= -4){
     address += 4*(byte_offset/4);
     byte_offset = byte_offset%4;
   }
@@ -132,7 +138,7 @@ int32_t lbu(uint32_t  address, int32_t byte_offset)
 
   // If byte-offset is greater than 4,
   // adds it to address
-  if(byte_offset >= 4){
+  if((byte_offset >= 4) |( byte_offset <= -4)){
     address += 4*(byte_offset/4);
     byte_offset = byte_offset%4;
   }
@@ -152,16 +158,18 @@ int32_t lbu(uint32_t  address, int32_t byte_offset)
 void sw(uint32_t  address, int32_t byte_offset, int32_t data)
 {
 
-  // address is not in range of word
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
   if(address%4 != 0){
-    printf("Load address not aligned to word boundary(word)!\n");
-    return;
+    byte_offset += address%4;
+    address -= address%4;
   }
 
-  // byte_offset out of range
-  if(byte_offset > 3){
-    printf("Load byte_offset not aligned to word boundary(word)!\n");
-    return;
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if((byte_offset >= 4) |( byte_offset <= -4)){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
   }
 
   // Access corresponding memory word address(each element is 4 bytes)
@@ -170,16 +178,18 @@ void sw(uint32_t  address, int32_t byte_offset, int32_t data)
 
 void sh(uint32_t  address, int32_t byte_offset, int16_t data)
 {
-  // address is not in range of word
+  // If address is not multiple of 4,
+  // converts it's module to byte-offset
   if(address%4 != 0){
-    printf("Load address not aligned to word boundary(halfword)!\n");
-    return;
+    byte_offset += address%4;
+    address -= address%4;
   }
 
-  // byte_offset out of half word range
-  if(byte_offset != 0 && byte_offset != 2){
-    printf("Load byte_offset not aligned to word boundary(halfword)!\n");
-    return;
+  // If byte-offset is greater than 4,
+  // adds it to address
+  if((byte_offset >= 4) |( byte_offset <= -4)){
+    address += 4*(byte_offset/4);
+    byte_offset = byte_offset%4;
   }
 
   int32_t tmp = data;
@@ -209,7 +219,7 @@ void sb(uint32_t  address, int32_t byte_offset, int8_t data)
 
   // If byte-offset is greater than 4,
   // adds it to address
-  if(byte_offset >= 4){
+  if((byte_offset >= 4) |( byte_offset <= -4)){
     address += 4*(byte_offset/4);
     byte_offset = byte_offset%4;
   }

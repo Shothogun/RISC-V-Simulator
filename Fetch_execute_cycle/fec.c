@@ -472,6 +472,8 @@ void execute()
 void step(){
   fetch();
   decode();
+                                                    //dump_reg('h');  DEBUGGING
+                                                    //getchar();
   execute();
   breg[zero] = 0;                 // zero is always 0 = hardwired 
 }
